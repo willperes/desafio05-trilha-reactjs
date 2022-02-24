@@ -23,50 +23,62 @@
         gap: 2rem;
         margin-bottom: 4rem;
 
-        .publicationDate, .author, .readingTime {
+        .publicationDate,
+        .author,
+        .readingTime {
             display: flex;
             align-items: center;
 
             span {
-                font-size: .9rem;
-                margin-left: .5rem;
+                font-size: 0.9rem;
+                margin-left: 0.5rem;
                 color: var(--gray-200);
             }
         }
     }
 
-    .postContent {
+    .content {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
-        padding-bottom: 5rem;
 
-        
+        h2 {
+            display: inline-block;
+            font-size: 2.3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
 
         p {
-            color: var(--gray-200);
-
-            strong {
-                display: inline-block;
-                font-size: 2.3rem;
-                font-weight: bold;
-
-                & + br {
-                    margin: 100rem;
-                }
+            & + p {
+                margin-top: 2rem;
             }
         }
 
-        ol, ul {
+        ol,
+        ul {
             padding-left: 1.25rem;
             display: flex;
             flex-direction: column;
-            gap: .5rem;
-            margin-bottom: 1rem;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        p, ol, ul {
+            font-size: 1.15rem;
+            color: var(--gray-200);
+
+            &:last-child {
+                margin-bottom: 3rem;
+            }
 
             strong {
                 font-size: 1rem;
                 margin: 0;
+            }
+
+            a {
+                color: var(--pink-500);
+                font-weight: bold;
             }
         }
     }

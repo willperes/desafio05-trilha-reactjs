@@ -9,6 +9,8 @@ import { getPrismicClient } from '../../services/prismic';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
+import { useRouter } from 'next/router';
+import ptBR from 'date-fns/locale/pt-BR';
 
 interface Post {
   first_publication_date: string | null;
@@ -22,8 +24,8 @@ interface Post {
       heading: string;
       body: {
         text: string;
-      };
-    };
+      }[];
+    }[];
   };
 }
 
@@ -32,7 +34,11 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps) {
-  return (
+  const router = useRouter();
+
+  return router.isFallback ? (
+    <h1>Carregando...</h1>
+  ) : (
     <>
       <Head>
         <title>{post.data.title}</title>
@@ -49,7 +55,7 @@ export default function Post({ post }: PostProps) {
         <div className={styles.postInformation}>
           <div className={styles.publicationDate}>
             <img src="/images/calendar.svg" alt="Calendar icon" />
-            <span>{post.first_publication_date}</span>
+            <span>{format(new Date(post.first_publication_date), "d MMM yyyy", { locale: ptBR } )}</span>
           </div>
           <div className={styles.author}>
             <img src="/images/user.svg" alt="User icon" />
@@ -61,7 +67,12 @@ export default function Post({ post }: PostProps) {
           </div>
         </div>
 
-        <div className={styles.postContent} dangerouslySetInnerHTML={{ __html: post.data.content.body.text }} />
+        {post.data.content.map(content => (
+          <div className={styles.content} key={content.heading}>
+            <h2>{content.heading}</h2>
+            <div className={styles.contentBody} dangerouslySetInnerHTML={{ __html: RichText.asHtml(content.body) }} />
+          </div>
+        ))}
       </main>
     </>
   );
@@ -94,19 +105,21 @@ export const getStaticProps: GetStaticProps = async context => {
   const response = await prismic.getByUID('posts', String(slug), {});
 
   const post = {
-    first_publication_date: format(new Date(response.first_publication_date), "dd MMM yyyy"),
+    uid: response.uid,
+    first_publication_date: response.first_publication_date,
     data: {
       title: response.data.title,
+      subtitle: response.data.subtitle,
       banner: {
         url: response.data.banner.url
       },
       author: response.data.author,
-      content: {
-        heading: response.data.content[0].heading,
-        body: {
-          text: RichText.asHtml(response.data.content[0].body)
+      content: response.data.content.map(content => {
+        return {
+          heading: content.heading,
+          body: content.body
         }
-      }
+      })
     }
   }
 
