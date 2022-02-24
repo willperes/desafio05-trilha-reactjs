@@ -1,16 +1,18 @@
+import Header from '../components/Header';
+import { useState } from 'react';
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
+
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 
 import { getPrismicClient } from '../services/prismic';
 import Prismic from '@prismicio/client';
 
+import { motion } from 'framer-motion/dist/framer-motion'
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
-import { format } from 'date-fns';
-import Head from 'next/head';
-import Header from '../components/Header';
-import { useState } from 'react';
-import ptBR from 'date-fns/locale/pt-BR';
 
 interface Post {
   uid?: string;
@@ -54,9 +56,9 @@ export default function Home({ postsPagination }: HomeProps) {
   };
 
   return (
-    <>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .75 }}>
       <Head>
-        <title>Posts</title>
+        <title>Posts | Space Travelling</title>
       </Head>
 
       <Header />
@@ -102,7 +104,7 @@ export default function Home({ postsPagination }: HomeProps) {
           </button>
         </div>
       )}
-    </>
+    </motion.div>
   );
 }
 

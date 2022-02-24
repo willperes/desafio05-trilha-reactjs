@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 
 import Prismic from '@prismicio/client';
 import { getPrismicClient } from '../../services/prismic';
+import { motion } from 'framer-motion/dist/framer-motion'
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
@@ -39,9 +40,9 @@ export default function Post({ post }: PostProps) {
   return router.isFallback ? (
     <h1>Carregando...</h1>
   ) : (
-    <>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .75 }}>
       <Head>
-        <title>{post.data.title}</title>
+        <title>{post.data.title} | Space Travelling</title>
       </Head>
 
       <Header />
@@ -74,7 +75,7 @@ export default function Post({ post }: PostProps) {
           </div>
         ))}
       </main>
-    </>
+    </motion.div>
   );
 }
 
